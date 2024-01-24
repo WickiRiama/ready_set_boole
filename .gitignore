@@ -1,5 +1,6 @@
 adder
 multiplier
+gray_code
 *.o
 *.d
 *.a
