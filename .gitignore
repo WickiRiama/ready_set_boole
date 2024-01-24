@@ -1,6 +1,7 @@
 adder
+multiplier
 *.o
 *.d
 *.a
-vscode/
+.vscode/
 objs/
