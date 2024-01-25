@@ -1,6 +1,7 @@
 adder
 multiplier
 gray_code
+bool_eval
 *.o
 *.d
 *.a
