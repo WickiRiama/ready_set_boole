@@ -12,6 +12,8 @@ private:
 
 	Ast(void);
 	void setRootNode(char value);
+	Node *addNode(Node *current_node, char value);
+	void clearTree(Node *root);
 
 public:
 	Ast(std::string const &formula);

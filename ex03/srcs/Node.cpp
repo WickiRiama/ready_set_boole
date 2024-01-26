@@ -4,14 +4,14 @@
 // Constructors
 //=============================================================================
 
-Node::Node(void) :
+Node::Node(void)
 {
 }
 
-Node::Node(Node *parent, std::string value) : _parent(_parent), _left_child(NULL), _right_child(NULL), _value(value)
+Node::Node(Node *parent, char value) : _parent(_parent), _left_child(NULL), _right_child(NULL), _value(value)
 {
 	this->_is_root = !parent;
-	this->_is_leaf = (value == "0" || value == "1");
+	this->_is_leaf = (value == '0' || value == '1');
 }
 
 Node::Node(Node const &src)
@@ -56,7 +56,7 @@ bool Node::isLeaf(void) const
 
 Node *Node::getParent(void)
 {
-	return this->parent;
+	return this->_parent;
 }
 
 Node *Node::getLeftChild(void)

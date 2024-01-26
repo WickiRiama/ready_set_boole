@@ -12,13 +12,27 @@ Ast::Ast(void)
 
 Ast::Ast(std::string const &formula)
 {
-	std::queue<char> operandes;
+	Node *current_node;
 
-	for (size_t i = 0; i < formula.size(); i++)
+	try
 	{
-		if (formula[i] == "0" || formula[i] == "1")
+		this->setRootNode(formula[formula.size() - 1]);
+	}
+	catch (InvalidFormulaException &e)
+	{
+		throw e;
+	}
+	current_node = this->_root_node;
+	for (size_t i = formula.size() - 1; i > 0; i--)
+	{
+		try
 		{
-			operandes.push(formula[i]);
+			current_node = this->addNode(current_node, formula[i - 1]);
+		}
+		catch (InvalidFormulaException &e)
+		{
+			clearTree(this->_root_node);
+			throw e;
 		}
 	}
 }
@@ -30,6 +44,7 @@ Ast::Ast(Ast const &src)
 
 Ast::~Ast(void)
 {
+	clearTree(this->_root_node);
 }
 
 //=============================================================================
@@ -48,18 +63,68 @@ Ast &Ast::operator=(Ast const &rhs)
 // Setters
 //=============================================================================
 
-void Ast::setRoodNode(char value)
+void Ast::setRootNode(char value)
 {
-	if (value == "1" || value == "0")
-	
+	if (value == '1' || value == '0')
+	{
+		throw InvalidFormulaException();
+	}
+	this->_root_node = new Node(NULL, value);
+}
+
+//=============================================================================
+// Methods
+//=============================================================================
+
+Node *Ast::addNode(Node *current_node, char value)
+{
+	Node *newNode = new Node(current_node, value);
+	if (!current_node->getRightChild())
+	{
+		current_node->setRightChild(newNode);
+		if (value == '1' || value == '0')
+		{
+			return current_node;
+		}
+		else
+		{
+			return newNode;
+		}
+	}
+	else if (!current_node->getLeftChild())
+	{
+		current_node->setLeftChild(newNode);
+		if (value == '1' || value == '0')
+		{
+			return current_node->getParent();
+		}
+		else
+		{
+			return newNode;
+		}
+	}
+	else
+	{
+		delete newNode;
+		throw InvalidFormulaException();
+	}
+}
+
+void Ast::clearTree(Node *root)
+{
+	if (root)
+	{
+		clearTree(root->getRightChild());
+		clearTree(root->getLeftChild());
+	}
+	delete root;
 }
 
 //=============================================================================
 // Exceptions
 //=============================================================================
 
-
-const char *InvalidFormulaException::what() const throw()
+const char *Ast::InvalidFormulaException::what() const throw()
 {
 	return "The formula is invalid";
 }

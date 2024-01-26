@@ -11,12 +11,12 @@ private:
 	Node *_parent;
 	Node *_left_child;
 	Node *_right_child;
-	std::string _value;
+	char _value;
 
 	Node(void);
 
 public:
-	Node(Node *parent, std::string value);
+	Node(Node *parent, char value);
 	Node(Node const &src);
 	~Node(void);
 
