@@ -1,10 +1,10 @@
-#include <iostream>
+#include <string>
 
 #include "bool_eval.h"
 
 
 
-bool eval_formula(string &formula)
+bool eval_formula(std::string &formula)
 {
 	// Operations :
 
@@ -15,7 +15,7 @@ bool eval_formula(string &formula)
 	// result = result >> 1;
 	// result = result | carry;
 
-	return ((n ^ (n << 1)) >> 1) | (n & (1 << 31));
+	return true;
 }
 
 // Convertisseur code Gray : https://www.dcode.fr/code-gray
