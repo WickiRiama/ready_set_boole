@@ -24,7 +24,9 @@ public:
 
 	bool isRoot(void) const;
 	bool isLeaf(void) const;
+	bool isComplete(void) const;
 	Node *getParent(void);
+	Node *getClosestIncompleteParent(void);
 	Node *getLeftChild(void);
 	Node *getRightChild(void);
 

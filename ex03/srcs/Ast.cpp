@@ -14,14 +14,7 @@ Ast::Ast(std::string const &formula)
 {
 	Node *current_node;
 
-	try
-	{
-		this->setRootNode(formula[formula.size() - 1]);
-	}
-	catch (InvalidFormulaException &e)
-	{
-		throw e;
-	}
+	this->setRootNode(formula[formula.size() - 1]);
 	current_node = this->_root_node;
 	for (size_t i = formula.size() - 1; i > 0; i--)
 	{
@@ -65,10 +58,6 @@ Ast &Ast::operator=(Ast const &rhs)
 
 void Ast::setRootNode(char value)
 {
-	if (value == '1' || value == '0')
-	{
-		throw InvalidFormulaException();
-	}
 	this->_root_node = new Node(NULL, value);
 }
 
@@ -78,35 +67,27 @@ void Ast::setRootNode(char value)
 
 Node *Ast::addNode(Node *current_node, char value)
 {
+	if (!current_node)
+	{
+		throw InvalidFormulaException();
+	}
+
 	Node *newNode = new Node(current_node, value);
 	if (!current_node->getRightChild())
 	{
 		current_node->setRightChild(newNode);
-		if (value == '1' || value == '0')
-		{
-			return current_node;
-		}
-		else
-		{
-			return newNode;
-		}
 	}
 	else if (!current_node->getLeftChild())
 	{
 		current_node->setLeftChild(newNode);
-		if (value == '1' || value == '0')
-		{
-			return current_node->getParent();
-		}
-		else
-		{
-			return newNode;
-		}
+	}
+	if (newNode->isLeaf())
+	{
+		return current_node->getClosestIncompleteParent();
 	}
 	else
 	{
-		delete newNode;
-		throw InvalidFormulaException();
+		return newNode;
 	}
 }
 

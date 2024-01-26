@@ -54,9 +54,24 @@ bool Node::isLeaf(void) const
 	return this->_is_leaf;
 }
 
+bool Node::isComplete(void) const
+{
+	return (this->_left_child && this->_right_child);
+}
+
 Node *Node::getParent(void)
 {
 	return this->_parent;
+}
+
+Node *Node::getClosestIncompleteParent(void)
+{
+	Node *current_node = this;
+	while (current_node && current_node->_left_child)
+	{
+		current_node = current_node->_parent;
+	}
+	return current_node;
 }
 
 Node *Node::getLeftChild(void)
