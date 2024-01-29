@@ -1,4 +1,5 @@
 #include <queue>
+#include <iostream>
 
 #include "Ast.hpp"
 
@@ -28,6 +29,7 @@ Ast::Ast(std::string const &formula)
 			throw e;
 		}
 	}
+	// Check if tree is full !!!
 }
 
 Ast::Ast(Ast const &src)
@@ -50,6 +52,7 @@ Ast &Ast::operator=(Ast const &rhs)
 	{
 		this->_root_node = rhs._root_node;
 	}
+	return *this;
 }
 
 //=============================================================================
@@ -99,6 +102,64 @@ void Ast::clearTree(Node *root)
 		clearTree(root->getLeftChild());
 	}
 	delete root;
+}
+
+int countSpaces(int n_rows)
+{
+	int result = 0;
+	for (int row = 0; row < n_rows; row++)
+	{
+		result += result * 2 + 1;
+	}
+	return result;
+}
+
+void Ast::printTree(void)
+{
+	if (!this->_root_node)
+	{
+		std::cout << "Empty tree" << std::endl;
+		return;
+	}
+	int n_rows = this->_root_node->getMaxDepth();
+	std::cout << "depth " << n_rows << std::endl;
+	int extern_spaces;
+	int between_spaces;
+	std::vector<Node *> current_row;
+	std::vector<Node *> next_row;
+
+	current_row.push_back(this->_root_node);
+	for (int i = 0; i <= n_rows; i++)
+	{
+		extern_spaces = countSpaces(n_rows - i);
+		between_spaces = 0;
+		next_row.clear();
+		for (size_t node = 0; node < current_row.size(); node++)
+		{
+			for (int space = 0; space < extern_spaces; space++)
+			{
+				std::cout << " ";
+			}
+			if (current_row[node])
+			{
+				std::cout << current_row[node]->getValue();
+				next_row.push_back(current_row[node]->getLeftChild());
+				next_row.push_back(current_row[node]->getRightChild());
+			}
+			else
+			{
+				std::cout << " ";
+				next_row.push_back(NULL);
+				next_row.push_back(NULL);
+			}
+			for (int space = 0; space < extern_spaces; space++)
+			{
+				std::cout << " ";
+			}
+		}
+		std::cout << std::endl;
+		current_row = next_row;
+	}
 }
 
 //=============================================================================

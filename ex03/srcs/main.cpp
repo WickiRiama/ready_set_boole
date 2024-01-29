@@ -10,4 +10,7 @@ int main(int ac, char** av)
 		std::cerr << "Usage: ./bool_eval string" << std::endl;
 		return 1;
 	}
+
+	std::string formula = av[1];
+	eval_formula(formula);
 }

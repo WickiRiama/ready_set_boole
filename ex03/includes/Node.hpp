@@ -29,6 +29,8 @@ public:
 	Node *getClosestIncompleteParent(void);
 	Node *getLeftChild(void);
 	Node *getRightChild(void);
+	char getValue(void) const;
+	int getMaxDepth(void) const;
 
 	void setLeftChild(Node *left_child);
 	void setRightChild(Node *right_child);

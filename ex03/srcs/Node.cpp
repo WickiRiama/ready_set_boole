@@ -8,7 +8,7 @@ Node::Node(void)
 {
 }
 
-Node::Node(Node *parent, char value) : _parent(_parent), _left_child(NULL), _right_child(NULL), _value(value)
+Node::Node(Node *parent, char value) : _parent(parent), _left_child(NULL), _right_child(NULL), _value(value)
 {
 	this->_is_root = !parent;
 	this->_is_leaf = (value == '0' || value == '1');
@@ -38,6 +38,7 @@ Node &Node::operator=(Node const &rhs)
 		this->_right_child = rhs._right_child;
 		this->_value = rhs._value;
 	}
+	return *this;
 }
 
 //=============================================================================
@@ -83,6 +84,27 @@ Node *Node::getRightChild(void)
 {
 	return this->_right_child;
 }
+
+char Node::getValue(void) const
+{
+	return this->_value;
+}
+
+int Node::getMaxDepth(void) const
+{
+	int left_depth = 0;
+	int right_depth = 0;
+	if (this->_left_child)
+	{
+		left_depth = this->_left_child->getMaxDepth() + 1;
+	}
+	if (this->_right_child)
+	{
+		right_depth = this->_right_child->getMaxDepth() + 1;
+	}
+	return std::max(left_depth, right_depth);
+}
+
 
 //=============================================================================
 // Setters

@@ -14,6 +14,7 @@ private:
 	void setRootNode(char value);
 	Node *addNode(Node *current_node, char value);
 	void clearTree(Node *root);
+	void printNode(Node *root, int spaces);
 
 public:
 	Ast(std::string const &formula);
@@ -27,6 +28,8 @@ public:
 	public:
 		virtual const char *what() const throw();
 	};
+
+	void printTree(void);
 };
 
 #endif
