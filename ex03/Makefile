@@ -5,7 +5,8 @@ OBJS_DIR = objs/
 SRCS = ${addprefix ${SRCS_DIR}, \
 	main.cpp \
 	bool_eval.cpp \
-	Ast.cpp}
+	Ast.cpp \
+	Node.cpp}
 
 OBJS = ${SRCS:${SRCS_DIR}%.cpp=${OBJS_DIR}%.o}
 DEPS = ${OBJS:%.o=%.d}
@@ -15,10 +16,10 @@ CXXFLAGS = -Wall -Wextra -Werror -g
 IFLAGS = -I./includes -MMD
 LFLAGS = 
 
-${NAME}: ${OBJS}
+${NAME}: ${OBJS_DIR} ${OBJS}
 	${CXX} ${CXXFLAGS} ${OBJS} -o ${NAME} ${LFLAGS}
 
-${OBJS_DIR}%.o: ${SRCS_DIR}%.cpp ${OBJS_DIR}
+${OBJS_DIR}%.o: ${SRCS_DIR}%.cpp
 	${CXX} ${CXXFLAGS} -c $< -o $@ ${IFLAGS}
 
 ${OBJS_DIR}:

@@ -15,10 +15,10 @@ CXXFLAGS = -Wall -Wextra -Werror -g
 IFLAGS = -I./includes -MMD
 LFLAGS = 
 
-${NAME}: ${OBJS}
+${NAME}: ${OBJS_DIR} ${OBJS}
 	${CXX} ${CXXFLAGS} ${OBJS} -o ${NAME} ${LFLAGS}
 
-${OBJS_DIR}%.o: ${SRCS_DIR}%.cpp ${OBJS_DIR}
+${OBJS_DIR}%.o: ${SRCS_DIR}%.cpp
 	${CXX} ${CXXFLAGS} -c $< -o $@ ${IFLAGS}
 
 ${OBJS_DIR}:
