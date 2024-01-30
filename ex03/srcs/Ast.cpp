@@ -1,5 +1,6 @@
 #include <queue>
 #include <iostream>
+#include <cmath>
 
 #include "Ast.hpp"
 
@@ -109,6 +110,16 @@ int countSpaces(int n_rows)
 	int result = 0;
 	for (int row = 0; row < n_rows; row++)
 	{
+		result += std::pow(2, (row + 1));
+	}
+	return result;
+}
+
+int countInnerSpaces(int n_rows)
+{
+	int result = 3;
+	for (int row = 0; row < n_rows - 1; row++)
+	{
 		result += result * 2 + 1;
 	}
 	return result;
@@ -124,21 +135,22 @@ void Ast::printTree(void)
 	int n_rows = this->_root_node->getMaxDepth();
 	std::cout << "depth " << n_rows << std::endl;
 	int extern_spaces;
-	int between_spaces;
+	int row_i;
 	std::vector<Node *> current_row;
 	std::vector<Node *> next_row;
+	std::vector<int> indexes = {countSpaces(n_rows)};
 
 	current_row.push_back(this->_root_node);
 	for (int i = 0; i <= n_rows; i++)
 	{
-		extern_spaces = countSpaces(n_rows - i);
-		between_spaces = 0;
+		row_i = 0;
 		next_row.clear();
 		for (size_t node = 0; node < current_row.size(); node++)
 		{
-			for (int space = 0; space < extern_spaces; space++)
+			while (row_i < indexes[0])
 			{
 				std::cout << " ";
+				row_i++;
 			}
 			if (current_row[node])
 			{
@@ -152,12 +164,47 @@ void Ast::printTree(void)
 				next_row.push_back(NULL);
 				next_row.push_back(NULL);
 			}
-			for (int space = 0; space < extern_spaces; space++)
-			{
-				std::cout << " ";
-			}
+			indexes.push_back(row_i - 1);
+			indexes.push_back(row_i + 1);
+			indexes.erase(indexes.begin());
+			row_i++;
 		}
 		std::cout << std::endl;
+
+		extern_spaces = countSpaces(n_rows - i - 1);
+		while (indexes[0] > extern_spaces)
+		{
+			row_i = 0;
+			for (size_t node = 0; node < current_row.size(); node++)
+			{
+				while (row_i < indexes[0])
+				{
+					std::cout << " ";
+					row_i++;
+				}
+				if (next_row[node *2])
+					std::cout << "/";
+				else
+					std::cout << " ";
+				indexes.push_back(row_i - 1);
+				indexes.erase(indexes.begin());
+				row_i++;
+				while (row_i < indexes[0])
+				{
+					std::cout << " ";
+					row_i++;
+				}
+				if (next_row[node *2 + 1])
+					std::cout << "\\";
+				else
+					std::cout << " ";
+				indexes.push_back(row_i + 1);
+				indexes.erase(indexes.begin());
+				row_i++;
+			}
+
+			std::cout << std::endl;
+		}
 		current_row = next_row;
 	}
 }
