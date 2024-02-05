@@ -31,7 +31,8 @@ public:
 		virtual const char *what() const throw();
 	};
 
-	void printTree(void);
+	void printTree(void) const;
+	bool isComplete(Node *root) const;
 };
 
 #endif

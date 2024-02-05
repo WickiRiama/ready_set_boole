@@ -30,7 +30,11 @@ Ast::Ast(std::string const &formula)
 			throw e;
 		}
 	}
-	// Check if tree is full !!!
+	if (!this->isComplete(this->_root_node))
+	{
+		clearTree(this->_root_node);
+		throw InvalidFormulaException();
+	}
 }
 
 Ast::Ast(Ast const &src)
@@ -198,7 +202,7 @@ void Ast::printNodeBranch(int n_rows, std::vector<Node *> &current_row, std::vec
 	}
 }
 
-void Ast::printTree(void)
+void Ast::printTree(void) const
 {
 	if (!this->_root_node)
 	{
@@ -219,6 +223,20 @@ void Ast::printTree(void)
 		current_row = next_row;
 	}
 }
+
+bool Ast::isComplete(Node *root) const
+{
+	if (!root)
+	{
+		return false;
+	}
+	if (root->isLeaf())
+	{
+		return true;
+	}
+	return (this->isComplete(root->getLeftChild()) && this->isComplete(root->getRightChild()));
+}
+
 
 //=============================================================================
 // Exceptions

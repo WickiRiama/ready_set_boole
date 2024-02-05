@@ -1,1 +1,1 @@
-Send InvalidFormulaException if the tree is not complete
+Evaluate formula
