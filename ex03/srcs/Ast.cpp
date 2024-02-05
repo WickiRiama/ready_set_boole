@@ -237,6 +237,80 @@ bool Ast::isComplete(Node *root) const
 	return (this->isComplete(root->getLeftChild()) && this->isComplete(root->getRightChild()));
 }
 
+//=============================================================================
+// Evaluation Methods
+//=============================================================================
+
+bool Ast::negation(bool b1) const
+{
+	return (!b1);
+}
+
+bool Ast::conjonction(bool b1, bool b2) const
+{
+	return (b1 && b2);
+}
+
+bool Ast::disjunction(bool b1, bool b2) const
+{
+	return (b1 || b2);
+}
+
+bool Ast::xDisjunction(bool b1, bool b2) const
+{
+	return (b1 != b2);
+}
+
+bool Ast::mCondition(bool b1, bool b2) const
+{
+	return (!(b1 && !b2));
+}
+
+bool Ast::equivalence(bool b1, bool b2) const
+{
+	return (b1 == b2);
+}
+
+bool Ast::evaluateNode(Node *node) const
+{
+	switch (node->getValue())
+	{
+	case '0':
+		/* code */
+		break;
+	case '1':
+		/* code */
+		break;
+	case '!':
+		/* code */
+		break;
+	case '&':
+		/* code */
+		break;
+	case '|':
+		/* code */
+		break;
+	case '^':
+		/* code */
+		break;
+	case '>':
+		/* code */
+		break;
+	case '=':
+		/* code */
+		break;
+	
+	default:
+		break;
+	}
+}
+
+
+bool Ast::evaluate(void) const
+{
+
+}
+
 
 //=============================================================================
 // Exceptions
@@ -246,3 +320,4 @@ const char *Ast::InvalidFormulaException::what() const throw()
 {
 	return "The formula is invalid";
 }
+
