@@ -4,7 +4,7 @@
 // Constructors
 //=============================================================================
 
-Node::Node(void)
+Node::Node(void): _is_root(false), _is_leaf(true), _parent(NULL), _left_child(NULL), _right_child(NULL), _value('X')
 {
 }
 

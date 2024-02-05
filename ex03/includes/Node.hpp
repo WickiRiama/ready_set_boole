@@ -13,9 +13,9 @@ private:
 	Node *_right_child;
 	char _value;
 
-	Node(void);
 
 public:
+	Node(void);
 	Node(Node *parent, char value);
 	Node(Node const &src);
 	~Node(void);

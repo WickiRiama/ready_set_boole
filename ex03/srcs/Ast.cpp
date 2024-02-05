@@ -80,6 +80,11 @@ Node *Ast::addNode(Node *current_node, char value)
 	if (!current_node->getRightChild())
 	{
 		current_node->setRightChild(newNode);
+		if (current_node->getValue() == '!')
+		{
+			Node *emptyNode = new Node();
+			current_node->setLeftChild(emptyNode);
+		}
 	}
 	else if (!current_node->getLeftChild())
 	{
@@ -135,7 +140,7 @@ void Ast::printNodeRow(std::vector<Node *> &current_row, std::vector<Node *> &ne
 			std::cout << " ";
 			i++;
 		}
-		if (current_row[node])
+		if (current_row[node] && current_row[node]->getValue() != 'X')
 		{
 			std::cout << current_row[node]->getValue();
 			next_row.push_back(current_row[node]->getLeftChild());
@@ -169,7 +174,7 @@ void Ast::printNodeBranch(int n_rows, std::vector<Node *> &current_row, std::vec
 				std::cout << " ";
 				i++;
 			}
-			if (next_row[node * 2])
+			if (next_row[node * 2] && next_row[node * 2]->getValue() != 'X')
 				std::cout << "/";
 			else
 				std::cout << " ";
