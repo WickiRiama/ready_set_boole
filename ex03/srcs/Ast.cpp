@@ -276,41 +276,47 @@ bool Ast::evaluateNode(Node *node) const
 	switch (node->getValue())
 	{
 	case '0':
-		/* code */
+		return false;
 		break;
 	case '1':
-		/* code */
+		return true;
 		break;
 	case '!':
-		/* code */
+		return negation(evaluateNode(node->getRightChild()));
 		break;
 	case '&':
-		/* code */
+		return conjonction(evaluateNode(node->getLeftChild()), evaluateNode(node->getRightChild()));
 		break;
 	case '|':
-		/* code */
+		return disjunction(evaluateNode(node->getLeftChild()), evaluateNode(node->getRightChild()));
 		break;
 	case '^':
-		/* code */
+		return xDisjunction(evaluateNode(node->getLeftChild()), evaluateNode(node->getRightChild()));
 		break;
 	case '>':
-		/* code */
+		return mCondition(evaluateNode(node->getLeftChild()), evaluateNode(node->getRightChild()));
 		break;
 	case '=':
-		/* code */
+		return equivalence(evaluateNode(node->getLeftChild()), evaluateNode(node->getRightChild()));
 		break;
-	
+
 	default:
+		throw InvalidFormulaException();
 		break;
 	}
 }
 
-
 bool Ast::evaluate(void) const
 {
-
+	try
+	{
+		return evaluateNode(this->_root_node);
+	}
+	catch (const InvalidFormulaException &e)
+	{
+		throw e;
+	}
 }
-
 
 //=============================================================================
 // Exceptions
@@ -320,4 +326,3 @@ const char *Ast::InvalidFormulaException::what() const throw()
 {
 	return "The formula is invalid";
 }
-

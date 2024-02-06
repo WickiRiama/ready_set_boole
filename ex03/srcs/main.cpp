@@ -12,5 +12,5 @@ int main(int ac, char** av)
 	}
 
 	std::string formula = av[1];
-	eval_formula(formula);
+	std::cout << std::boolalpha << eval_formula(formula) << std::endl;
 }

@@ -9,11 +9,11 @@ bool eval_formula(std::string &formula)
 	try
 	{
 		Ast ast(formula);
-		ast.printTree();
+		return ast.evaluate();
 	}
 	catch (Ast::InvalidFormulaException &e)
 	{
 		std::cerr << e.what() << std::endl;
 	}
-	return true;
+	return false;
 }
