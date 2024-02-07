@@ -2,6 +2,7 @@ adder
 multiplier
 gray_code
 bool_eval
+*/ex04
 *.o
 *.d
 *.a
