@@ -35,6 +35,16 @@ void printHeader(std::string const &variables)
 	std::cout << std::endl;
 }
 
+void printEvaluation(std::string &values, bool result)
+{
+	std::cout << "|";
+	for (size_t i = 0; i < values.size(); i++)
+	{
+		std::cout << " " << values[i] << " |";
+	}
+	std::cout << " " << result << " |" << std::endl;
+}
+
 std::string formulaReplacement(std::string &formula, std::string &variables, std::string &values)
 {
 	std::string newFormula(formula);
@@ -45,22 +55,20 @@ std::string formulaReplacement(std::string &formula, std::string &variables, std
 	return newFormula;
 }
 
-void setLine(std::string &formula, std::string &variables, std::string &values, size_t i)
+void printLines(std::string &formula, std::string &variables, std::string &values, size_t i)
 {
 	if (i == variables.size())
 	{
 		std::string replacedFormula = formulaReplacement(formula, variables, values);
-		std::cout << replacedFormula << std::endl;
-		// evaluate formula
-		// print
+		Ast ast(replacedFormula);
+		bool result = ast.evaluate();
+		printEvaluation(values, result);
 		return ;
 	}
-	setLine(formula, variables, values, i + 1);
+	printLines(formula, variables, values, i + 1);
 	values[i] = '1';
-	setLine(formula, variables, values, i + 1);
+	printLines(formula, variables, values, i + 1);
 	values[i] = '0';
-
-	return ;
 }
 
 void print_truth_table(std::string &formula)
@@ -68,12 +76,18 @@ void print_truth_table(std::string &formula)
 	std::string variables = setVariables(formula);
 	std::string values(variables.size(), '0');
 
-	setLine(formula, variables, values, 0);
 	if (variables.size() == 0)
 	{
 		std::cerr << "The formula is invalid" << std::endl;
 		return;
 	}
-
 	printHeader(variables);
+	try
+	{
+		printLines(formula, variables, values, 0);
+	}
+	catch(const Ast::InvalidFormulaException &e)
+	{
+		std::cerr << e.what() << std::endl;
+	}
 }
