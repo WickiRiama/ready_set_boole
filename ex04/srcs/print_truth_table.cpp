@@ -76,7 +76,6 @@ void print_truth_table(std::string &formula)
 	try
 	{
 		Ast ast(formula);
-		ast.printTree();
 		ast.printTruthTable();
 		// printLines(formula, variables, values, 0);
 	}

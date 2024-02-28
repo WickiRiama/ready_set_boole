@@ -1,5 +1,4 @@
 Remplacer les pointeurs par des références
 
 Ex04 : Revoir le code pour:
-- intégrer l'arbre avec les variables dans la classe AST
 - trouver une mémoïsation
