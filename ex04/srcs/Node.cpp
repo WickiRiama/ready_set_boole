@@ -4,14 +4,14 @@
 // Constructors
 //=============================================================================
 
-Node::Node(void): _is_root(false), _is_leaf(true), _parent(NULL), _left_child(NULL), _right_child(NULL), _value('X')
+Node::Node(void): _is_root(false), _is_leaf(true), _parent(NULL), _left_child(NULL), _right_child(NULL), _value('@')
 {
 }
 
 Node::Node(Node *parent, char value) : _parent(parent), _left_child(NULL), _right_child(NULL), _value(value)
 {
 	this->_is_root = !parent;
-	this->_is_leaf = (value == '0' || value == '1');
+	this->_is_leaf = (isalpha(value) && isupper(value));
 }
 
 Node::Node(Node const &src)

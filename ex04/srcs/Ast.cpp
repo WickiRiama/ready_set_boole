@@ -1,6 +1,7 @@
 #include <queue>
 #include <iostream>
 #include <cmath>
+#include <algorithm>
 
 #include "Ast.hpp"
 
@@ -12,7 +13,7 @@ Ast::Ast(void)
 {
 }
 
-Ast::Ast(std::string const &formula)
+Ast::Ast(std::string const &formula) : _operators("!&|^>=")
 {
 	Node *current_node;
 
@@ -56,6 +57,8 @@ Ast &Ast::operator=(Ast const &rhs)
 	if (this != &rhs)
 	{
 		this->_root_node = rhs._root_node;
+		this->_variables = rhs._variables;
+		this->_operators = rhs._operators;
 	}
 	return *this;
 }
@@ -66,6 +69,10 @@ Ast &Ast::operator=(Ast const &rhs)
 
 void Ast::setRootNode(char value)
 {
+	if (isalpha(value) && isupper(value))
+	{
+		this->_variables[value] = '0';
+	}
 	this->_root_node = new Node(NULL, value);
 }
 
@@ -80,6 +87,10 @@ Node *Ast::addNode(Node *current_node, char value)
 		throw InvalidFormulaException();
 	}
 
+	if (isalpha(value) && isupper(value))
+	{
+		this->_variables[value] = '0';
+	}
 	Node *newNode = new Node(current_node, value);
 	if (!current_node->getRightChild())
 	{
@@ -144,7 +155,7 @@ void Ast::printNodeRow(std::vector<Node *> &current_row, std::vector<Node *> &ne
 			std::cout << " ";
 			i++;
 		}
-		if (current_row[node] && current_row[node]->getValue() != 'X')
+		if (current_row[node] && current_row[node]->getValue() != '@')
 		{
 			std::cout << current_row[node]->getValue();
 			next_row.push_back(current_row[node]->getLeftChild());
@@ -178,7 +189,7 @@ void Ast::printNodeBranch(int n_rows, std::vector<Node *> &current_row, std::vec
 				std::cout << " ";
 				i++;
 			}
-			if (next_row[node * 2] && next_row[node * 2]->getValue() != 'X')
+			if (next_row[node * 2] && next_row[node * 2]->getValue() != '@')
 				std::cout << "/";
 			else
 				std::cout << " ";
@@ -222,6 +233,54 @@ void Ast::printTree(void) const
 		printNodeBranch(n_rows - i - 1, current_row, next_row, indexes);
 		current_row = next_row;
 	}
+}
+
+void Ast::printHeader(void) const
+{
+	std::cout << "|";
+	for (std::map<char, char>::const_iterator it = _variables.begin(); it != _variables.end(); it++)
+	{
+		std::cout << " " << it->first << " |";
+	}
+	std::cout << " = |" << std::endl;
+	std::cout << "|";
+	for (size_t i = 0; i <= _variables.size(); i++)
+	{
+		std::cout << "---|";
+	}
+	std::cout << std::endl;
+}
+
+void Ast::printEvaluation(void) const
+{
+	std::cout << "|";
+	for (std::map<char, char>::const_iterator it = _variables.begin(); it != _variables.end(); it++)
+	{
+		std::cout << " " << it->second << " |";
+	}
+	std::cout << " " << this->evaluate() << " |" << std::endl;
+}
+
+void Ast::printLines(std::map<char, char>::iterator it)
+{
+	if (it == _variables.end())
+	{
+		printEvaluation();
+		return;
+	}
+	std::map<char, char>::iterator next_it = it;
+	next_it++;
+	printLines(next_it);
+	it->second = '1';
+	printLines(next_it);
+	it->second = '0';
+}
+
+void Ast::printTruthTable(void)
+{
+	this->printHeader();
+	std::map<char, char>::iterator it = _variables.begin();
+	this->printLines(it);
 }
 
 bool Ast::isComplete(Node *root) const
@@ -273,7 +332,10 @@ bool Ast::equivalence(bool b1, bool b2) const
 
 bool Ast::evaluateNode(Node *node) const
 {
-	switch (node->getValue())
+	char c = node->getValue();
+	if (isalpha(c) && isupper(c))
+		c = _variables.at(node->getValue());
+	switch (c)
 	{
 	case '0':
 		return false;

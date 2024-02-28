@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 #include "Node.hpp"
 
@@ -10,13 +11,19 @@ class Ast
 {
 private:
 	Node *_root_node;
+	std::map<char, char> _variables;
+	std::string _operators;
 
 	Ast(void);
 	void setRootNode(char value);
+
 	Node *addNode(Node *current_node, char value);
 	void clearTree(Node *root);
 	void printNodeRow(std::vector<Node *> &current_row, std::vector<Node *> &next_row, std::vector<int> &indexes) const;
 	void printNodeBranch(int n_rows, std::vector<Node *> &current_row, std::vector<Node *> &next_row, std::vector<int> &indexes) const;
+	void printHeader(void) const;
+	void printEvaluation(void) const;
+	void printLines(std::map<char, char>::iterator it);
 	bool isComplete(Node *root) const;
 
 	bool negation(bool b1) const;
@@ -41,6 +48,7 @@ public:
 	};
 
 	void printTree(void) const;
+	void printTruthTable(void);
 	bool evaluate(void) const;
 };
 

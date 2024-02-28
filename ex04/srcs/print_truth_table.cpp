@@ -63,7 +63,7 @@ void printLines(std::string &formula, std::string &variables, std::string &value
 		Ast ast(replacedFormula);
 		bool result = ast.evaluate();
 		printEvaluation(values, result);
-		return ;
+		return;
 	}
 	printLines(formula, variables, values, i + 1);
 	values[i] = '1';
@@ -73,20 +73,14 @@ void printLines(std::string &formula, std::string &variables, std::string &value
 
 void print_truth_table(std::string &formula)
 {
-	std::string variables = setVariables(formula);
-	std::string values(variables.size(), '0');
-
-	if (variables.size() == 0)
-	{
-		std::cerr << "The formula is invalid" << std::endl;
-		return;
-	}
-	printHeader(variables);
 	try
 	{
-		printLines(formula, variables, values, 0);
+		Ast ast(formula);
+		ast.printTree();
+		ast.printTruthTable();
+		// printLines(formula, variables, values, 0);
 	}
-	catch(const Ast::InvalidFormulaException &e)
+	catch (const Ast::InvalidFormulaException &e)
 	{
 		std::cerr << e.what() << std::endl;
 	}
