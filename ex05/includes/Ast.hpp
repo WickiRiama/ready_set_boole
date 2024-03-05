@@ -34,9 +34,9 @@ private:
 	bool equivalence(bool b1, bool b2) const;
 	bool evaluateNode(Node *node) const;
 
-	void removeDoubleNegation(Node *negation);
-	void removeDisjunctionNegation(Node *negation);
-	void removeConjonctionNegation(Node *negation);
+	Node *removeDoubleNegation(Node *negation);
+	Node *removeDisjunctionNegation(Node *negation);
+	Node *removeConjonctionNegation(Node *negation);
 	void removeMaterialCondition(Node *m_condition);
 	void removeEquivalence(Node *equivalence);
 	void convert2NegationNormalForm(Node *root);

@@ -389,11 +389,17 @@ bool Ast::evaluate(void) const
 // Normal Negation Form Methods
 //=============================================================================
 
-void Ast::removeDoubleNegation(Node *negation)
+Node *Ast::removeDoubleNegation(Node *negation)
 {
 	Node *parent = negation->getParent();
 	Node *newChild = negation->getRightChild()->getRightChild();
-	if (parent->getLeftChild() == negation)
+
+	if (!parent)
+	{
+		this->_root_node = newChild;
+		newChild->setParent(NULL);
+	}
+	else if (parent->getLeftChild() == negation)
 	{
 		parent->setLeftChild(newChild);
 	}
@@ -401,16 +407,22 @@ void Ast::removeDoubleNegation(Node *negation)
 	{
 		parent->setRightChild(newChild);
 	}
+	return newChild;
 }
 
-void Ast::removeDisjunctionNegation(Node *negation)
+Node *Ast::removeDisjunctionNegation(Node *negation)
 {
 	Node *parent = negation->getParent();
 	Node *disjunction = negation->getRightChild();
 	Node *left_child = disjunction->getLeftChild();
 	Node *right_child = disjunction->getRightChild();
 
-	if (parent->getLeftChild() == negation)
+	if (!parent)
+	{
+		this->_root_node = disjunction;
+		this->_root_node->setParent(NULL);
+	}
+	else if (parent->getLeftChild() == negation)
 	{
 		parent->setLeftChild(disjunction);
 	}
@@ -418,6 +430,7 @@ void Ast::removeDisjunctionNegation(Node *negation)
 	{
 		parent->setRightChild(disjunction);
 	}
+
 	disjunction->setValue('&');
 	disjunction->setLeftChild(NULL);
 	disjunction->setRightChild(NULL);
@@ -425,30 +438,40 @@ void Ast::removeDisjunctionNegation(Node *negation)
 	addNode(disjunction, '!');
 	disjunction->getLeftChild()->setRightChild(left_child);
 	disjunction->getRightChild()->setRightChild(right_child);
+
+	return disjunction;
 }
 
-void Ast::removeConjonctionNegation(Node *negation)
+Node *Ast::removeConjonctionNegation(Node *negation)
 {
 	Node *parent = negation->getParent();
-	Node *disjunction = negation->getRightChild();
-	Node *left_child = disjunction->getLeftChild();
-	Node *right_child = disjunction->getRightChild();
+	Node *conjonction = negation->getRightChild();
+	Node *left_child = conjonction->getLeftChild();
+	Node *right_child = conjonction->getRightChild();
 
-	if (parent->getLeftChild() == negation)
+	if (!parent)
 	{
-		parent->setLeftChild(disjunction);
+		this->_root_node = conjonction;
+		this->_root_node->setParent(NULL);
+	}
+	else if (parent->getLeftChild() == negation)
+	{
+		parent->setLeftChild(conjonction);
 	}
 	else
 	{
-		parent->setRightChild(disjunction);
+		parent->setRightChild(conjonction);
 	}
-	disjunction->setValue('|');
-	disjunction->setLeftChild(NULL);
-	disjunction->setRightChild(NULL);
-	addNode(disjunction, '!');
-	addNode(disjunction, '!');
-	disjunction->getLeftChild()->setRightChild(left_child);
-	disjunction->getRightChild()->setRightChild(right_child);
+
+	conjonction->setValue('|');
+	conjonction->setLeftChild(NULL);
+	conjonction->setRightChild(NULL);
+	addNode(conjonction, '!');
+	addNode(conjonction, '!');
+	conjonction->getLeftChild()->setRightChild(left_child);
+	conjonction->getRightChild()->setRightChild(right_child);
+
+	return conjonction;
 }
 
 void Ast::removeMaterialCondition(Node *m_condition)
@@ -478,8 +501,8 @@ void Ast::removeEquivalence(Node *equivalence)
 	new_right->setRightChild(left_child);
 
 	new_left = addNode(equivalence, '>');
-	new_left->setLeftChild(left_child);
-	new_left->setRightChild(right_child);
+	new_left->setLeftChild(new Node(*left_child));
+	new_left->setRightChild(new Node(*right_child));
 
 	removeMaterialCondition(new_right);
 	removeMaterialCondition(new_left);
@@ -487,27 +510,29 @@ void Ast::removeEquivalence(Node *equivalence)
 
 void Ast::convert2NegationNormalForm(Node *root)
 {
-	if (root->isLeaf())
+	if (!root || root->isLeaf())
 	{
 		return;
 	}
-	while (root->getValue() == '!' && !isupper(root->getRightChild()->getValue()))
+	while (root && root->getValue() == '!' && !isupper(root->getRightChild()->getValue()))
 	{
 		if (root->getRightChild()->getValue() == '!')
-			removeDoubleNegation(root);
+			root = removeDoubleNegation(root);
 		else if (root->getRightChild()->getValue() == '|')
-			removeDisjunctionNegation(root);
+			root = removeDisjunctionNegation(root);
 		else if (root->getRightChild()->getValue() == '&')
-			removeConjonctionNegation(root);
+			root = removeConjonctionNegation(root);
 		else if (root->getRightChild()->getValue() == '>')
 		{
 			removeMaterialCondition(root->getRightChild());
-			removeDisjunctionNegation(root);
+			printTree();
+			root = removeDisjunctionNegation(root);
 		}
 		else if (root->getRightChild()->getValue() == '=')
 		{
 			removeEquivalence(root->getRightChild());
-			removeConjonctionNegation(root);
+			printTree();
+			root = removeConjonctionNegation(root);
 		}
 		printTree();
 	}

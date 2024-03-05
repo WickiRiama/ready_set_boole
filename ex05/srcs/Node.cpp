@@ -125,3 +125,10 @@ void Node::setValue(char value)
 	this->_value = value;
 }
 
+void Node::setParent(Node *parent)
+{
+	this->_parent = parent;
+	if (!parent)
+		this->_is_root = true;
+}
+

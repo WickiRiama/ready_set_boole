@@ -35,6 +35,7 @@ public:
 	void setLeftChild(Node *left_child);
 	void setRightChild(Node *right_child);
 	void setValue(char value);
+	void setParent(Node *parent);
 };
 
 #endif
