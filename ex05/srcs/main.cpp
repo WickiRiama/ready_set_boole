@@ -13,7 +13,7 @@ int main(int ac, char **av)
 	}
 
 	std::string formula = av[1];
-	// formula = "AB!!";
+	// formula = "AB^";
 
 	try
 	{

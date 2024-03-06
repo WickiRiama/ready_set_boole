@@ -19,7 +19,7 @@ Ast::Ast(std::string const &formula) : _operators("!&|^>=")
 	Node *current_node;
 
 	this->setRootNode(formula[formula.size() - 1]);
-	if(this->_root_node && this->_root_node->getValue() == '!')
+	if (this->_root_node && this->_root_node->getValue() == '!')
 	{
 		Node *emptyNode = new Node();
 		this->_root_node->setLeftChild(emptyNode);
@@ -348,7 +348,6 @@ void Ast::printLines(std::map<char, char>::iterator it, std::ofstream &file)
 	it->second = '0';
 }
 
-
 void Ast::printTruthTable(void)
 {
 	this->printHeader();
@@ -522,6 +521,34 @@ Node *Ast::removeDisjunctionNegation(Node *negation)
 	return disjunction;
 }
 
+Node *Ast::removeXDisjunctionNegation(Node *negation)
+{
+	Node *parent = negation->getParent();
+	Node *x_disjunction = negation->getRightChild();
+
+	if (!parent)
+	{
+		this->_root_node = x_disjunction;
+		this->_root_node->setParent(NULL);
+	}
+	else if (parent->getLeftChild() == negation)
+	{
+		parent->setLeftChild(x_disjunction);
+	}
+	else
+	{
+		parent->setRightChild(x_disjunction);
+	}
+
+	x_disjunction->setValue('=');
+	removeEquivalence(x_disjunction);
+
+	negation->setRightChild(NULL);
+	clearTree(negation);
+
+	return x_disjunction;
+}
+
 Node *Ast::removeConjonctionNegation(Node *negation)
 {
 	Node *parent = negation->getParent();
@@ -591,15 +618,48 @@ void Ast::removeEquivalence(Node *equivalence)
 	removeMaterialCondition(new_left);
 }
 
-void Ast::convert2NegationNormalForm(Node *root)
+Node *Ast::removeXDisjunction(Node *x_disjunction)
 {
-	if (!root || root->isLeaf())
+	Node *parent = x_disjunction->getParent();
+	Node *negation = new Node(parent, '!');
+	negation->setLeftChild(new Node());
+
+	if (!parent)
 	{
-		return;
+		this->_root_node = negation;
 	}
-	while (root && root->getValue() == '!' && !isupper(root->getRightChild()->getValue()))
+	else if (parent->getLeftChild() == x_disjunction)
 	{
-		if (root->getRightChild()->getValue() == '!')
+		parent->setLeftChild(negation);
+	}
+	else
+	{
+		parent->setRightChild(negation);
+	}
+	negation->setRightChild(x_disjunction);
+	x_disjunction->setParent(negation);
+	x_disjunction->setValue('=');
+
+	return negation;
+}
+
+bool isXDisjunction(Node *root)
+{
+	return (root && root->getValue() == '^');
+}
+
+bool isValidNegation(Node *root)
+{
+	return (root && root->getValue() == '!' && isupper(root->getRightChild()->getValue()));
+}
+
+Node *Ast::removeNegations(Node *root)
+{
+	while (isXDisjunction(root) || (root->getValue() == '!' && !isValidNegation(root)))
+	{
+		if (root->getValue() == '^')
+			root = removeXDisjunction(root);
+		else if (root->getRightChild()->getValue() == '!')
 			root = removeDoubleNegation(root);
 		else if (root->getRightChild()->getValue() == '|')
 			root = removeDisjunctionNegation(root);
@@ -615,15 +675,25 @@ void Ast::convert2NegationNormalForm(Node *root)
 			removeEquivalence(root->getRightChild());
 			root = removeConjonctionNegation(root);
 		}
+		else if (root->getRightChild()->getValue() == '^')
+			root = removeXDisjunctionNegation(root->getRightChild());
 	}
+	return root;
+}
+
+void Ast::convert2NegationNormalForm(Node *root)
+{
+	if (!root || root->isLeaf())
+		return;
+
+	root = removeNegations(root);
 	if (root->getValue() == '>')
-	{
 		removeMaterialCondition(root);
-	}
 	else if (root->getValue() == '=')
-	{
 		removeEquivalence(root);
-	}
+	else if (root->getValue() == '^')
+		removeXDisjunction(root);
+
 	convert2NegationNormalForm(root->getLeftChild());
 	convert2NegationNormalForm(root->getRightChild());
 }
@@ -632,7 +702,6 @@ void Ast::convert2NegationNormalForm(void)
 {
 	convert2NegationNormalForm(this->_root_node);
 }
-
 
 //=============================================================================
 // Exceptions

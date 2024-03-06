@@ -41,9 +41,12 @@ private:
 
 	Node *removeDoubleNegation(Node *negation);
 	Node *removeDisjunctionNegation(Node *negation);
+	Node *removeXDisjunctionNegation(Node *negation);
 	Node *removeConjonctionNegation(Node *negation);
+	Node *removeXDisjunction(Node *x_disjunction);
 	void removeMaterialCondition(Node *m_condition);
 	void removeEquivalence(Node *equivalence);
+	Node *removeNegations(Node *root);
 	void convert2NegationNormalForm(Node *root);
 
 public:
