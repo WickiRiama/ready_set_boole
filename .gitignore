@@ -7,5 +7,6 @@ nnf
 *.o
 *.d
 *.a
+*.txt
 .vscode/
 objs/

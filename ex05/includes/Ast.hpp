@@ -22,8 +22,11 @@ private:
 	void printNodeRow(std::vector<Node *> &current_row, std::vector<Node *> &next_row, std::vector<int> &indexes) const;
 	void printNodeBranch(int n_rows, std::vector<Node *> &current_row, std::vector<Node *> &next_row, std::vector<int> &indexes) const;
 	void printHeader(void) const;
+	void printHeader(std::ofstream &file) const;
 	void printEvaluation(void) const;
+	void printEvaluation(std::ofstream &file) const;
 	void printLines(std::map<char, char>::iterator it);
+	void printLines(std::map<char, char>::iterator it, std::ofstream &file);
 	bool isComplete(Node *root) const;
 
 	bool negation(bool b1) const;
@@ -56,6 +59,7 @@ public:
 
 	void printTree(void) const;
 	void printTruthTable(void);
+	void printTruthTable(std::ofstream &file);
 	bool evaluate(void) const;
 	void convert2NegationNormalForm(void);
 };
