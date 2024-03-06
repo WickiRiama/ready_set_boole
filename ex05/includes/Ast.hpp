@@ -29,6 +29,8 @@ private:
 	void printLines(std::map<char, char>::iterator it, std::ofstream &file);
 	bool isComplete(Node *root) const;
 
+	std::string getFormula(Node *root) const;
+
 	bool negation(bool b1) const;
 	bool conjonction(bool b1, bool b2) const;
 	bool disjunction(bool b1, bool b2) const;
@@ -62,6 +64,7 @@ public:
 	void printTruthTable(std::ofstream &file);
 	bool evaluate(void) const;
 	void convert2NegationNormalForm(void);
+	std::string getFormula(void) const;
 };
 
 #endif

@@ -8,7 +8,7 @@ std::string negation_normal_form(std::string &formula)
 	{
 		Ast ast(formula);
 		ast.convert2NegationNormalForm();
-		return "test";
+		return ast.getFormula();
 	}
 	catch(const Ast::InvalidFormulaException& e)
 	{

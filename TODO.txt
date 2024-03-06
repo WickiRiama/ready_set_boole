@@ -2,3 +2,5 @@ Remplacer les pointeurs par des références
 
 Ex04 : Revoir le code pour:
 - trouver une mémoïsation
+
+Ex05: Faire le où exclusif !!!!!

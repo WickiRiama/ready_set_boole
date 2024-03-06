@@ -83,6 +83,31 @@ void Ast::setRootNode(char value)
 }
 
 //=============================================================================
+// Getters
+//=============================================================================
+
+std::string Ast::getFormula(void) const
+{
+	std::string result = getFormula(this->_root_node);
+	reverse(result.begin(), result.end());
+	return result;
+}
+
+std::string Ast::getFormula(Node *root) const
+{
+	if (!root || root->getValue() == '@')
+	{
+		return "";
+	}
+
+	std::string result = "";
+	result += root->getValue();
+	result += getFormula(root->getRightChild());
+	result += getFormula(root->getLeftChild());
+	return result;
+}
+
+//=============================================================================
 // Methods
 //=============================================================================
 
