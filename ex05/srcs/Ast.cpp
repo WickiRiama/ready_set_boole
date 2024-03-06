@@ -407,6 +407,8 @@ Node *Ast::removeDoubleNegation(Node *negation)
 	{
 		parent->setRightChild(newChild);
 	}
+	negation->getRightChild()->setRightChild(NULL);
+	clearTree(negation);
 	return newChild;
 }
 
@@ -439,6 +441,9 @@ Node *Ast::removeDisjunctionNegation(Node *negation)
 	disjunction->getLeftChild()->setRightChild(left_child);
 	disjunction->getRightChild()->setRightChild(right_child);
 
+	negation->setRightChild(NULL);
+	clearTree(negation);
+
 	return disjunction;
 }
 
@@ -470,6 +475,9 @@ Node *Ast::removeConjonctionNegation(Node *negation)
 	addNode(conjonction, '!');
 	conjonction->getLeftChild()->setRightChild(left_child);
 	conjonction->getRightChild()->setRightChild(right_child);
+
+	negation->setRightChild(NULL);
+	clearTree(negation);
 
 	return conjonction;
 }
@@ -525,26 +533,21 @@ void Ast::convert2NegationNormalForm(Node *root)
 		else if (root->getRightChild()->getValue() == '>')
 		{
 			removeMaterialCondition(root->getRightChild());
-			printTree();
 			root = removeDisjunctionNegation(root);
 		}
 		else if (root->getRightChild()->getValue() == '=')
 		{
 			removeEquivalence(root->getRightChild());
-			printTree();
 			root = removeConjonctionNegation(root);
 		}
-		printTree();
 	}
 	if (root->getValue() == '>')
 	{
 		removeMaterialCondition(root);
-		printTree();
 	}
 	else if (root->getValue() == '=')
 	{
 		removeEquivalence(root);
-		printTree();
 	}
 	convert2NegationNormalForm(root->getLeftChild());
 	convert2NegationNormalForm(root->getRightChild());
@@ -552,7 +555,6 @@ void Ast::convert2NegationNormalForm(Node *root)
 
 void Ast::convert2NegationNormalForm(void)
 {
-	printTree();
 	convert2NegationNormalForm(this->_root_node);
 }
 
