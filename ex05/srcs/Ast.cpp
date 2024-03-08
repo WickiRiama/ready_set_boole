@@ -676,7 +676,7 @@ Node *Ast::removeNegations(Node *root)
 			root = removeConjonctionNegation(root);
 		}
 		else if (root->getRightChild()->getValue() == '^')
-			root = removeXDisjunctionNegation(root->getRightChild());
+			root = removeXDisjunctionNegation(root);
 	}
 	return root;
 }
