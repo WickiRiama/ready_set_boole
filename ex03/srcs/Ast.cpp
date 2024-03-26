@@ -75,7 +75,7 @@ void Ast::setRootNode(char value)
 
 Node *Ast::addNode(Node *current_node, char value)
 {
-	if (!current_node)
+	if (!current_node || current_node->isLeaf())
 	{
 		throw InvalidFormulaException();
 	}
