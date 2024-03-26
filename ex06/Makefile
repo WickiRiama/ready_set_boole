@@ -16,6 +16,7 @@ SRCS += ${addprefix ${SRCS_DIR}${AST_DIR}, \
 	Ast_evaluation.cpp \
 	Ast_truth_table.cpp \
 	Ast_negative_normal_form.cpp \
+	Ast_conjunctive_normal_form.cpp \
 	}
 
 OBJS = ${SRCS:${SRCS_DIR}%.cpp=${OBJS_DIR}%.o}
@@ -52,5 +53,11 @@ fclean: clean
 .PHONY: re
 re: fclean
 	make -C .
+
+.PHONY: test
+test: ${NAME}
+	@read -p "Formula: " formula \
+	&& echo $$formula \
+	&& valgrind --leak-check=full ./$(NAME) $$formula && diff after.txt before.txt
 
 -include ${DEPS}

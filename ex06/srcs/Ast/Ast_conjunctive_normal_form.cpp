@@ -1,46 +1,63 @@
 #include "Ast.hpp"
 
-/* 
-Convert2CNN(void)
+void Ast::convert2CNN(void)
 {
-	Convert2CNN(this->_root_node)
+	this->convert2NegationNormalForm();
+	this->convert2CNN(this->_root_node);
 }
 
-Convert2CNN(Node *root)
+void Ast::convert2CNN(Node *root)
 {
-	si non root ou root = leaf
-		return
-	si & et parent et parent = |
-		root = remonte(&)
-		Convert2CNN(root)
-	sinon
-		Convert2CNN(left_child)
-		Convert2CNN(right_child)
+	if (!root || root->isLeaf())
+	{
+		return;
+	}
+	if (root->getValue() == '&')
+	{
+		Node *parent = root->getParent();
+		if (parent && parent->getValue() == '|')
+		{
+			root = moveUp(root);;
+			convert2CNN(root);
+		}
+	}
+	else
+	{
+		convert2CNN(root->getLeftChild());
+		convert2CNN(root->getRightChild());
+	}
 }
 
-createDisjunction(Node *parent, Node *node1, Node* node2)
+Node *Ast::newDisjunction(Node *parent, Node *a, Node *b) const
 {
-	new node = Node(parent, '|')
-	node->left_child = node1
-	node->right_child = node2
-	return node
+	Node *result = new Node(parent, '|');
 
+	result->setLeftChild(a);
+	result->setRightChild(b);
+
+	return result;
 }
 
-remonte(*Node conjunction) {
-	disjuncton = conjunction->parent
-	si conjunction == disjunction->left_child
-		A = disjunction->right_child
-	sinon
-		A = disjunction->left_child
-	B = conjunction->left_child
-	C = conjunction->right_child
+Node *Ast::moveUp(Node *conjunction) 
+{
+	Node *disjunction = conjunction->getParent();
 
-	disjunction = &
-	dijunction->left_child = createDisjunction(copy(A), B)
-	dijunction->right_child = createDisjunction(A, C)
+	Node *a;
+	if (conjunction == disjunction->getLeftChild())
+	{
+		a = disjunction->getRightChild();
+	}
+	else
+	{
+		a = disjunction->getLeftChild();
+	}
+	Node *b = conjunction->getLeftChild();
+	Node *c = conjunction->getRightChild();
+	Node *a_copy = new Node(*a);
 
-	return disjunction
+	disjunction->setValue('&');
+	disjunction->setLeftChild(newDisjunction(disjunction, a_copy, b));
+	disjunction->setRightChild(newDisjunction(disjunction, a, c));
+
+	return disjunction;
 }
-
-*/

@@ -154,6 +154,7 @@ void Ast::clearTree(Node *root)
 		clearTree(root->getLeftChild());
 	}
 	delete root;
+	root = NULL;
 }
 
 bool Ast::isComplete(Node *root) const

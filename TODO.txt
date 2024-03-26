@@ -1,6 +1,10 @@
 Remplacer les pointeurs par des références
 
+Reporter la correction de l'operateur = sur les exos precedent le 6
+
 Ex04 : Revoir le code pour:
 - trouver une mémoïsation
 
 Ex05: Faire le où exclusif !!!!!
+
+Ex06: Corriger le leak + voir pourquoi la fonction retournée est mauvaise

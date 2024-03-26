@@ -95,6 +95,18 @@ public:
 	void convert2NegationNormalForm(void);
 
 //=============================================================================
+// Conjunctive Normal Form
+//=============================================================================
+
+private:
+	void convert2CNN(Node *root);
+	Node *moveUp(Node *conjunction);
+	Node *newDisjunction(Node *parent, Node *a, Node *b) const;
+
+public:
+	void convert2CNN(void);
+
+//=============================================================================
 // Exception
 //=============================================================================
 

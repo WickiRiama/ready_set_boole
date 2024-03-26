@@ -1,19 +1,19 @@
 #include <iostream>
 #include <fstream>
 
-#include "negation_normal_form.h"
+#include "conjunctive_normal_form.h"
 #include "Ast.hpp"
 
 int main(int ac, char **av)
 {
 	if (ac != 2)
 	{
-		std::cerr << "Usage: ./nnf string" << std::endl;
+		std::cerr << "Usage: ./cnf string" << std::endl;
 		return 1;
 	}
 
 	std::string formula = av[1];
-	formula = "AB^!";
+	// formula = "A!B=";
 
 	try
 	{
@@ -24,7 +24,7 @@ int main(int ac, char **av)
 			ast.printTruthTable(first_file);
 		first_file.close();
 
-		std::string new_formula = negation_normal_form(formula);
+		std::string new_formula = conjunctive_normal_form(formula);
 		std::cout << new_formula << std::endl;
 
 		Ast new_ast(new_formula);

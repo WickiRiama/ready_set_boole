@@ -7,7 +7,8 @@ std::string conjunctive_normal_form(std::string &formula)
 	try
 	{
 		Ast ast(formula);
-		return "test";
+		ast.convert2CNN();
+		return ast.getFormula();
 	}
 	catch(const Ast::InvalidFormulaException& e)
 	{
