@@ -13,7 +13,6 @@ private:
 	Node *_right_child;
 	char _value;
 
-
 public:
 	Node(void);
 	Node(Node *parent, char value);
