@@ -3,6 +3,7 @@ multiplier
 gray_code
 bool_eval
 nnf
+cnf
 */ex04
 *.o
 *.d

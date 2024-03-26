@@ -15,22 +15,28 @@ private:
 	std::string _operators;
 
 	Ast(void);
-	void setRootNode(char value);
-
-	Node *addNode(Node *current_node, char value);
-	void clearTree(Node *root);
-	void printNodeRow(std::vector<Node *> &current_row, std::vector<Node *> &next_row, std::vector<int> &indexes) const;
-	void printNodeBranch(int n_rows, std::vector<Node *> &current_row, std::vector<Node *> &next_row, std::vector<int> &indexes) const;
-	void printHeader(void) const;
-	void printHeader(std::ofstream &file) const;
-	void printEvaluation(void) const;
-	void printEvaluation(std::ofstream &file) const;
-	void printLines(std::map<char, char>::iterator it);
-	void printLines(std::map<char, char>::iterator it, std::ofstream &file);
-	bool isComplete(Node *root) const;
 
 	std::string getFormula(Node *root) const;
+	bool isComplete(Node *root) const;
 
+	void setRootNode(char value);
+	Node *addNode(Node *current_node, char value);
+	void clearTree(Node *root);
+
+public:
+	Ast(std::string const &formula);
+	Ast(Ast const &src);
+	~Ast(void);
+
+	Ast &operator=(Ast const &rhs);
+
+	std::string getFormula(void) const;
+
+//=============================================================================
+// Evaluation
+//=============================================================================
+
+private:
 	bool negation(bool b1) const;
 	bool conjonction(bool b1, bool b2) const;
 	bool disjunction(bool b1, bool b2) const;
@@ -39,6 +45,42 @@ private:
 	bool equivalence(bool b1, bool b2) const;
 	bool evaluateNode(Node *node) const;
 
+public:
+	bool evaluate(void) const;
+
+//=============================================================================
+// Print
+//=============================================================================
+
+private:
+	void printNodeRow(std::vector<Node *> &current_row, std::vector<Node *> &next_row, std::vector<int> &indexes) const;
+	void printNodeBranch(int n_rows, std::vector<Node *> &current_row, std::vector<Node *> &next_row, std::vector<int> &indexes) const;
+
+public:
+	void printTree(void) const;
+
+//=============================================================================
+// Truth Table
+//=============================================================================
+
+private:
+	void printHeader(void) const;
+	void printHeader(std::ofstream &file) const;
+	void printEvaluation(void) const;
+	void printEvaluation(std::ofstream &file) const;
+
+	void printLines(std::map<char, char>::iterator it);
+	void printLines(std::map<char, char>::iterator it, std::ofstream &file);
+
+public:
+	void printTruthTable(void);
+	void printTruthTable(std::ofstream &file);
+
+//=============================================================================
+// Negative Normal Form
+//=============================================================================
+
+private:
 	Node *removeDoubleNegation(Node *negation);
 	Node *removeDisjunctionNegation(Node *negation);
 	Node *removeXDisjunctionNegation(Node *negation);
@@ -50,11 +92,14 @@ private:
 	void convert2NegationNormalForm(Node *root);
 
 public:
-	Ast(std::string const &formula);
-	Ast(Ast const &src);
-	~Ast(void);
+	void convert2NegationNormalForm(void);
 
-	Ast &operator=(Ast const &rhs);
+//=============================================================================
+// Exception
+//=============================================================================
+
+public:
+
 
 	class InvalidFormulaException : public std::exception
 	{
@@ -62,12 +107,6 @@ public:
 		virtual const char *what() const throw();
 	};
 
-	void printTree(void) const;
-	void printTruthTable(void);
-	void printTruthTable(std::ofstream &file);
-	bool evaluate(void) const;
-	void convert2NegationNormalForm(void);
-	std::string getFormula(void) const;
 };
 
 #endif
